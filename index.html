@@ -1,252 +1,251 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>TESTAML — Address Risk Check (Demo)</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>TESTAML Platform</title>
 
-  <style>
-    :root {
-      --bg: #0f1115;
-      --panel: #161a22;
-      --text: #e7e9ee;
-      --muted: #9aa1b2;
-      --border: #242a36;
-      --accent: #4f7cff;
-      --danger: #ff4d4f;
-    }
+<style>
+:root {
+  --bg: #0b0e14;
+  --panel: #121726;
+  --panel-2: #171c2f;
+  --border: #242a3d;
+  --text: #e6e9f2;
+  --muted: #9aa3b2;
+  --accent: #4f7cff;
+}
 
-    * { box-sizing: border-box; }
+* { box-sizing: border-box; }
 
-    body {
-      margin: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, Arial, sans-serif;
-      background: radial-gradient(1200px 600px at 50% -10%, #1b2240 0%, var(--bg) 50%);
-      color: var(--text);
-    }
+body {
+  margin: 0;
+  font-family: Inter, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Arial;
+  background: var(--bg);
+  color: var(--text);
+}
 
-    header {
-      padding: 18px 22px;
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      background: rgba(15,17,21,.7);
-      backdrop-filter: blur(8px);
-    }
+/* Layout */
+.app {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  height: 100vh;
+}
 
-    .brand {
-      font-weight: 700;
-      letter-spacing: .4px;
-    }
+/* Sidebar */
+.sidebar {
+  background: linear-gradient(180deg, #0f1322, #0b0e14);
+  border-right: 1px solid var(--border);
+  padding: 20px 16px;
+}
 
-    main {
-      max-width: 420px;
-      margin: 40px auto;
-      padding: 0 16px;
-    }
+.brand {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 28px;
+  letter-spacing: .3px;
+}
 
-    .card {
-      background: var(--panel);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 22px;
-      box-shadow: 0 10px 30px rgba(0,0,0,.35);
-    }
+.nav {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
 
-    h1 {
-      margin: 0 0 6px;
-      font-size: 22px;
-    }
+.nav button {
+  background: none;
+  border: none;
+  color: var(--muted);
+  padding: 12px 14px;
+  border-radius: 10px;
+  text-align: left;
+  cursor: pointer;
+  font-size: 14px;
+}
 
-    .subtitle {
-      color: var(--muted);
-      font-size: 14px;
-      margin-bottom: 18px;
-    }
+.nav button.active,
+.nav button:hover {
+  background: var(--panel);
+  color: var(--text);
+}
 
-    label {
-      font-size: 13px;
-      color: var(--muted);
-      display: block;
-      margin: 14px 0 6px;
-    }
+/* Main */
+.main {
+  display: grid;
+  grid-template-rows: 64px 1fr;
+}
 
-    input, select {
-      width: 100%;
-      padding: 12px 12px;
-      border-radius: 10px;
-      border: 1px solid var(--border);
-      background: #0f1320;
-      color: var(--text);
-      font-size: 14px;
-      outline: none;
-    }
+/* Header */
+.header {
+  background: var(--panel);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;
+}
 
-    input::placeholder { color: #6b7280; }
+.header .title {
+  font-weight: 600;
+}
 
-    button {
-      width: 100%;
-      margin-top: 18px;
-      padding: 13px;
-      border-radius: 12px;
-      border: none;
-      font-size: 15px;
-      font-weight: 600;
-      color: white;
-      background: linear-gradient(135deg, #5b8cff, var(--accent));
-      cursor: pointer;
-    }
+.header .badge {
+  font-size: 12px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: rgba(79,124,255,.15);
+  color: #cdd7ff;
+}
 
-    button:disabled {
-      opacity: .6;
-      cursor: not-allowed;
-    }
+/* Content */
+.content {
+  padding: 28px;
+  overflow: auto;
+}
 
-    .note {
-      margin-top: 14px;
-      font-size: 12px;
-      color: var(--muted);
-      line-height: 1.45;
-    }
+.card {
+  background: var(--panel-2);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 22px;
+  margin-bottom: 20px;
+}
 
-    /* Overlay */
+.card h2 {
+  margin-top: 0;
+}
 
-    .overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(10,12,18,.92);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      padding: 18px;
-      z-index: 1000;
-    }
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
+}
 
-    .overlay.active { display: flex; }
-
-    .overlay-card {
-      max-width: 520px;
-      background: #0f1115;
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 26px;
-      text-align: left;
-      box-shadow: 0 20px 50px rgba(0,0,0,.5);
-    }
-
-    .overlay-card h2 {
-      margin-top: 0;
-      color: var(--danger);
-    }
-
-    .overlay-card p {
-      font-size: 15px;
-      line-height: 1.6;
-      color: var(--text);
-    }
-
-    .overlay-card ul {
-      margin: 14px 0 18px 18px;
-      color: var(--muted);
-    }
-
-    .overlay-actions button {
-      margin-top: 10px;
-      background: #1f2433;
-    }
-
-    .overlay-actions button.primary {
-      background: linear-gradient(135deg, #5b8cff, var(--accent));
-    }
-
-    footer {
-      margin-top: 18px;
-      text-align: center;
-      font-size: 12px;
-      color: var(--muted);
-    }
-  </style>
+/* Placeholder blocks */
+.placeholder {
+  height: 110px;
+  border-radius: 12px;
+  border: 1px dashed var(--border);
+  background: repeating-linear-gradient(
+    45deg,
+    #121726,
+    #121726 10px,
+    #0f1322 10px,
+    #0f1322 20px
+  );
+}
+</style>
 </head>
 
 <body>
-  <header>
+<div class="app">
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
     <div class="brand">TESTAML</div>
-    <div style="font-size:12px;color:#8a90a4;">Educational demo</div>
-  </header>
 
-  <main>
-    <div class="card">
-      <h1>AML Risk Check</h1>
-      <div class="subtitle">
-        Demo interface for address risk assessment.
-        No blockchain interaction is performed.
-      </div>
+    <div class="nav">
+      <button class="active" data-tab="dashboard">Dashboard</button>
+      <button data-tab="checks">Address Checks</button>
+      <button data-tab="reports">Reports</button>
+      <button data-tab="monitoring">Monitoring</button>
+      <button data-tab="api">API Access</button>
+      <button data-tab="settings">Settings</button>
+    </div>
+  </aside>
 
-      <label>Blockchain address</label>
-      <input id="address" placeholder="Enter wallet address" />
-
-      <label>Network</label>
-      <select id="network">
-        <option>Ethereum (ETH)</option>
-        <option>Bitcoin (BTC)</option>
-        <option>TRON (TRX)</option>
-        <option>BNB Chain</option>
-      </select>
-
-      <button id="checkBtn" disabled>Run check</button>
-
-      <div class="note">
-        TESTAML is a simulated educational interface.  
-        The entered address is not sent or stored.
-      </div>
+  <!-- Main -->
+  <section class="main">
+    <div class="header">
+      <div class="title" id="pageTitle">Dashboard</div>
+      <div class="badge">Educational Demo</div>
     </div>
 
-    <footer>
-      © TESTAML — demo only
-    </footer>
-  </main>
+    <div class="content" id="content">
 
-  <!-- Overlay -->
-  <div class="overlay" id="overlay">
-    <div class="overlay-card">
-      <h2>Stop. This is the critical moment.</h2>
-      <p>
-        You were ready to trust an unfamiliar service and proceed
-        based solely on interface familiarity.
-      </p>
-      <ul>
-        <li>You did not verify who operates this service</li>
-        <li>You did not check how the “check” is actually performed</li>
-        <li>You relied on formality and design instead of evidence</li>
-      </ul>
-      <p>
-        <strong>In real attacks, this is where users lose assets.</strong><br/>
-        No warning screen appears there.
-      </p>
-
-      <div class="overlay-actions">
-        <button class="primary" onclick="closeOverlay()">I understand</button>
+      <!-- Dashboard -->
+      <div data-page="dashboard">
+        <div class="grid">
+          <div class="card">
+            <h2>Overview</h2>
+            <p class="muted">System status and activity summary.</p>
+            <div class="placeholder"></div>
+          </div>
+          <div class="card">
+            <h2>Risk Signals</h2>
+            <p class="muted">Aggregated indicators.</p>
+            <div class="placeholder"></div>
+          </div>
+        </div>
       </div>
+
+      <!-- Address Checks -->
+      <div data-page="checks" hidden>
+        <div class="card">
+          <h2>Address Risk Check</h2>
+          <p>This section simulates an address analysis workflow.</p>
+          <div class="placeholder"></div>
+        </div>
+      </div>
+
+      <!-- Reports -->
+      <div data-page="reports" hidden>
+        <div class="card">
+          <h2>Reports</h2>
+          <p>Generated compliance and risk reports.</p>
+          <div class="placeholder"></div>
+        </div>
+      </div>
+
+      <!-- Monitoring -->
+      <div data-page="monitoring" hidden>
+        <div class="card">
+          <h2>Monitoring</h2>
+          <p>Continuous tracking and alerts.</p>
+          <div class="placeholder"></div>
+        </div>
+      </div>
+
+      <!-- API -->
+      <div data-page="api" hidden>
+        <div class="card">
+          <h2>API Access</h2>
+          <p>Integration endpoints and keys.</p>
+          <div class="placeholder"></div>
+        </div>
+      </div>
+
+      <!-- Settings -->
+      <div data-page="settings" hidden>
+        <div class="card">
+          <h2>Settings</h2>
+          <p>Account and platform configuration.</p>
+          <div class="placeholder"></div>
+        </div>
+      </div>
+
     </div>
-  </div>
+  </section>
+</div>
 
-  <script>
-    const addressInput = document.getElementById('address');
-    const btn = document.getElementById('checkBtn');
-    const overlay = document.getElementById('overlay');
+<script>
+const buttons = document.querySelectorAll('.nav button');
+const pages = document.querySelectorAll('[data-page]');
+const title = document.getElementById('pageTitle');
 
-    addressInput.addEventListener('input', () => {
-      btn.disabled = addressInput.value.trim().length < 6;
+buttons.forEach(btn => {
+  btn.onclick = () => {
+    buttons.forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+
+    const tab = btn.dataset.tab;
+    title.textContent = btn.textContent;
+
+    pages.forEach(p => {
+      p.hidden = p.dataset.page !== tab;
     });
-
-    btn.addEventListener('click', () => {
-      overlay.classList.add('active');
-    });
-
-    function closeOverlay() {
-      overlay.classList.remove('active');
-    }
-  </script>
+  };
+});
+</script>
 </body>
 </html>
