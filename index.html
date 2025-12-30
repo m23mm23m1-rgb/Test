@@ -1,71 +1,268 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Access Verification</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <style>
-    body {
-      margin: 0;
-      font-family: -apple-system, BlinkMacSystemFont, Inter, Arial, sans-serif;
-      background: #0b0f1a;
-      color: #e6e9f0;
-    }
-    header {
-      padding: 20px 28px;
-      display: flex;
-      justify-content: space-between;
-      border-bottom: 1px solid #1c2233;
-    }
-    .btn {
-      background: #4f7cff;
-      border: none;
-      padding: 12px 20px;
-      color: white;
-      border-radius: 10px;
-      font-weight: 600;
-    }
-    main {
-      max-width: 1100px;
-      margin: auto;
-      padding: 80px 28px;
-    }
-    .card {
-      background: #12182b;
-      border: 1px solid #1c2233;
-      border-radius: 18px;
-      padding: 32px;
-      margin-top: 32px;
-    }
-    footer {
-      text-align: center;
-      opacity: 0.5;
-      font-size: 12px;
-      padding: 32px;
-    }
-  </style>
+<meta charset="UTF-8" />
+<title>Protocol Access Portal</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<style>
+:root {
+  --bg: #070b16;
+  --panel: #0f1424;
+  --border: #1c2233;
+  --accent: #4f7cff;
+  --text: #e6e9f0;
+  --muted: #9aa4bf;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, Inter, Segoe UI, Roboto, Arial;
+  background:
+    radial-gradient(1200px 600px at 80% -20%, #1a2555 0%, transparent 60%),
+    radial-gradient(800px 400px at -20% 20%, #14204a 0%, transparent 55%),
+    var(--bg);
+  color: var(--text);
+}
+
+/* HEADER */
+header {
+  padding: 20px 32px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--border);
+  backdrop-filter: blur(6px);
+}
+
+header .logo {
+  font-weight: 600;
+  letter-spacing: .3px;
+}
+
+.btn {
+  background: var(--accent);
+  border: none;
+  color: #fff;
+  padding: 12px 20px;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn.secondary {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text);
+}
+
+/* MAIN */
+main {
+  max-width: 1100px;
+  margin: auto;
+  padding: 80px 32px;
+}
+
+h1 {
+  font-size: 42px;
+  margin-bottom: 10px;
+}
+
+p {
+  color: var(--muted);
+  max-width: 700px;
+}
+
+/* GRID */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 24px;
+  margin-top: 40px;
+}
+
+.card {
+  background: linear-gradient(180deg, #111831, #0d1327);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 28px;
+  position: relative;
+  overflow: hidden;
+}
+
+.card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(300px 150px at top right, rgba(79,124,255,.15), transparent);
+  pointer-events: none;
+}
+
+.card h3 {
+  margin-top: 0;
+}
+
+/* STATUS */
+.status {
+  margin-top: 20px;
+  padding: 14px 18px;
+  border-radius: 10px;
+  display: inline-block;
+  background: rgba(79,124,255,.12);
+  color: #cdd7ff;
+  font-size: 14px;
+}
+
+/* MODAL */
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.65);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+
+.modal-box {
+  width: 92%;
+  max-width: 420px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 26px;
+}
+
+.modal-box h3 {
+  margin-top: 0;
+}
+
+.fake-box {
+  background: #0b1022;
+  border: 1px dashed var(--border);
+  border-radius: 10px;
+  padding: 12px;
+  font-size: 13px;
+  color: var(--muted);
+  margin: 16px 0;
+}
+
+/* FOOTER */
+footer {
+  text-align: center;
+  font-size: 13px;
+  color: var(--muted);
+  padding: 50px 20px;
+}
+</style>
 </head>
+
 <body>
 
 <header>
-  <div>Protocol Access</div>
-  <button class="btn">Connect Wallet</button>
+  <div class="logo">Protocol Access</div>
+  <button id="connectBtn" class="btn">Connect Wallet</button>
 </header>
 
 <main>
-  <h1>Wallet detected</h1>
-  <p>Your address is eligible for verification.</p>
+  <h1 id="title">Secure Protocol Gateway</h1>
+  <p id="subtitle">
+    This interface simulates a modern Web3 access flow for security awareness and training purposes.
+  </p>
 
-  <div class="card">
-    <h2>Verification Required</h2>
-    <p>Please sign a message to continue.</p>
-    <button class="btn">Verify Wallet</button>
+  <div id="status" class="status">
+    Wallet not connected
+  </div>
+
+  <div class="grid">
+    <div class="card">
+      <h3>Wallet Overview</h3>
+      <p><strong>Address:</strong> <span id="addr">—</span></p>
+      <p><strong>ETH:</strong> 2.41</p>
+      <p><strong>USDC:</strong> 1,284.00</p>
+    </div>
+
+    <div class="card">
+      <h3>Verification</h3>
+      <p>
+        Verification is required to access protocol features.
+        This demo shows how users are often guided toward risky actions.
+      </p>
+      <button id="verifyBtn" class="btn secondary" disabled>
+        Verify Access
+      </button>
+    </div>
+
+    <div class="card">
+      <h3>Security Notes</h3>
+      <p>
+        • No blockchain interaction<br>
+        • No signatures<br>
+        • No real wallet access<br><br>
+        Used for demonstrations, training and reports.
+      </p>
+    </div>
   </div>
 </main>
 
 <footer>
-  ⚠️ Security awareness demo. No wallet connection or blockchain interaction.
+⚠️ Security awareness demo. No wallet connection, signatures or blockchain interaction.
 </footer>
+
+<!-- MODAL -->
+<div id="modal" class="modal">
+  <div class="modal-box">
+    <h3>Signature Request (Demo)</h3>
+    <p>
+      In real scenarios, users often approve actions without understanding the consequences.
+    </p>
+
+    <div class="fake-box">
+      Sign this message to continue.<br>
+      No gas fee required.
+    </div>
+
+    <button class="btn" style="width:100%;margin-bottom:10px">
+      Sign (disabled demo)
+    </button>
+
+    <button class="btn secondary" style="width:100%" onclick="alert(
+      'This is the critical moment: unclear context + trust in interface = user mistake.'
+    )">
+      Why this is dangerous
+    </button>
+  </div>
+</div>
+
+<script>
+const connectBtn = document.getElementById('connectBtn');
+const verifyBtn  = document.getElementById('verifyBtn');
+const status     = document.getElementById('status');
+const addr       = document.getElementById('addr');
+const modal      = document.getElementById('modal');
+
+let connected = false;
+
+connectBtn.onclick = () => {
+  if (connected) return;
+  connected = true;
+
+  connectBtn.textContent = '0xA7F3…9C21';
+  status.textContent = 'Wallet connected — verification required';
+  addr.textContent = '0xA7F3…9C21';
+  verifyBtn.disabled = false;
+};
+
+verifyBtn.onclick = () => {
+  modal.style.display = 'flex';
+};
+
+modal.onclick = e => {
+  if (e.target === modal) modal.style.display = 'none';
+};
+</script>
 
 </body>
 </html>
